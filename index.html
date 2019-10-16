@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Шаклеин 8091</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="d-flex vh-100 col row">
+                <div class="align-self-center jumbotron col" style="min-height:75%">
+                    <div class="row">
+                        <form class="col">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="polynomial">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-6">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item">
+                                    <a href="#raus" class="nav-link active" data-toggle="tab">
+                                        Метод Рауса
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#gurvic" class="nav-link" data-toggle="tab">Метод Гурвица</a>
+                                </li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane fade show active" id="raus">
+                                    <table class="table table-bordered">
+                                        <tbody id="rausTable"></tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="gurvic">
+                                    <table class="table table-bordered">
+                                        <tbody id="gurvicTable"></tbody>
+                                    </table>
+                                    <div id="gurvicDets" class="row">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <blockquote class="blockquote text-right">
+                                <h1 id="rausResult" class="text-success mb-0">Система устойчива</h1>
+                                <footer class="blockquote-footer">По Раусу</footer>
+                            </blockquote>
+                            <blockquote class="blockquote text-right">
+                                <h1 id="gurvicResult" class="text-success mb-0">Система устойчива</h1>
+                                <footer class="blockquote-footer">По Гурвицу</footer>
+                            </blockquote>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/jquery-3.3.1.js"></script>
+    <script src="js/bootstrap.bundle.js"></script>
+    <script>
+        function printMatrix(matrix, query) {
+            var $table = $(query);
+            $table.html("");
+            for (var i = 0; i < matrix.length; i++) {
+                var tr = $table.append($("<tr></tr>"));
+                for (var j = 0; j < matrix[i].length; j++) {
+                    tr.append("<td data-row='" + i + "' data-column='" + j + "'>" + matrix[i][j].toFixed(2) +
+                        "</td>");
+                }
+            }
+        }
+
+        function solveRause(monomials) {
+            var matrix = [
+                [],
+                []
+            ];
+            for (var i = monomials.length - 1; i >= 0; i -= 2) {
+                matrix[0].push(monomials[i] || 0);
+                matrix[1].push(monomials[i - 1] || 0);
+            }
+            for (var i = 2; i < monomials.length; i++) {
+                var r = matrix[i - 2][0] / matrix[i - 1][0];
+                matrix.push([]);
+                for (var j = 0; j < monomials.length / 2; j++) {
+                    matrix[i][j] = (matrix[i - 2][j + 1] - r * matrix[i - 1][j + 1]) || 0;
+                }
+            }
+            printMatrix(matrix, "#rausTable");
+
+            $("#rausResult").addClass("text-success").removeClass("text-danger").text("Система устойчива");
+            for (var i = 1; i < matrix.length; i++) {
+                if (matrix[0][0] * matrix[i][0] <= 0) {
+                    $("#rausResult").removeClass("text-success").addClass("text-danger").text("Система не устойчива");
+                    $("#rausTable td[data-row='" + i + "'][data-column='0']").addClass("bg-danger");
+                }
+            }
+
+        }
+
+        function det(matrix) {
+            if (matrix.length == 1) {
+                return matrix[0][0];
+            } else {
+                var result = 0;
+                for (var i = 0; i < matrix.length; i++) {
+                    var d = matrix[0][i] * det(matrix.slice(1).map(function (x) {
+                        return [...x.slice(0, i), ...x.slice(i + 1)];
+                    }));
+                    result += (i % 2 == 0 ? d : -d);
+                }
+                return result;
+            }
+        }
+
+        function solveGurvic(monomials) {
+            var matrix = [];
+            for (var i = 0; i < monomials.length - 1; i++) {
+                matrix.push([]);
+                for (var j = 0; j < monomials.length - 1; j++) {
+                    matrix[i][j] = monomials[monomials.length - (2 - i + 2 * j)] || 0;
+                }
+            }
+
+            var sign = det(matrix);
+            $("#gurvicDets").html("");
+            $("#gurvicResult").addClass("text-success").removeClass("text-danger").text("Система устойчива");
+            $("#gurvicDets").html("");
+            for (var i = 1; i <= matrix.length; i++) {
+                var curr = det(matrix.slice(0, i).map(function (e) {
+                    return e.slice(0, i)
+                }));
+                if (curr * sign <= 0) {
+                    $("#gurvicResult").removeClass("text-success").addClass("text-danger").text("Система не устойчива");
+                    $("#gurvicDets").append($("<span class='det col-6 text-danger'>Δ" + i + "=" + curr + "  </span>"));
+                } else {
+                    $("#gurvicDets").append($("<span class='det col-6'>Δ" + i + "=" + curr + "  </span>"));
+                }
+            }
+            printMatrix(matrix, "#gurvicTable")
+        }
+
+        $("#polynomial").on('input', function (e) {
+            var val = e.target.value;
+            if (!val.match(/^[\d\.\+\-p\^]+$/)) {
+                $(this).addClass("is-invalid");
+                return;
+            } else {
+                $(this).removeClass("is-invalid");
+            }
+            console.log(1);
+            var monomialsStrs = val.match(/([-+\d\.]+)?p?(\^([\d]+))?/g);
+            var monomials = [];
+            for (var i = 0; i < monomialsStrs.length - 1; i++) {
+                var parts = monomialsStrs[i].match(/^([-+\d\.]+)?p?(\^([\d]+))?$/);
+                var index = ~parts[0].indexOf('p') ? (parts[3] ? Number(parts[3]) : 1) : 0;
+                var coef = parts[1] ? (parts[
+                    1] == '-' ? -1 : (parts[1] == '+' ? 1 : Number(parts[
+                    1]))) : 1;
+                if (index > 10) {
+                    alert("Index are to big!");
+                    $(this).addClass("is-invalid");
+                    return;
+                }
+                monomials[index] = coef;
+            }
+            solveRause(monomials);
+            solveGurvic(monomials);
+        });
+    </script>
+</body>
+
+</html>
