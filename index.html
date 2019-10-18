@@ -14,7 +14,7 @@
     <div class="container">
         <div class="row">
             <div class="d-flex vh-100 col row">
-                <div class="align-self-center jumbotron col" style="min-height:75%">
+                <div class="align-self-center jumbotron col" style="min-height:75%; margin-bottom: 0">
                     <div class="row">
                         <form class="col">
                             <div class="form-group">
@@ -101,11 +101,11 @@
             }
             printMatrix(matrix, "#rausTable");
 
-            $("#rausResult").addClass("text-success").removeClass("text-danger").text("Система устойчива");
+            $("#rausResult").addClass("text-success").removeClass("text-danger").removeClass("text-white").text("Система устойчива");
             for (var i = 1; i < matrix.length; i++) {
                 if (matrix[0][0] * matrix[i][0] <= 0) {
                     $("#rausResult").removeClass("text-success").addClass("text-danger").text("Система не устойчива");
-                    $("#rausTable td[data-row='" + i + "'][data-column='0']").addClass("bg-danger");
+                    $("#rausTable td[data-row='" + i + "'][data-column='0']").addClass("bg-danger").addClass("text-white");
                 }
             }
 
