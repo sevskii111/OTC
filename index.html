@@ -33,6 +33,9 @@
                                 <li class="nav-item">
                                     <a href="#gurvic" class="nav-link" data-toggle="tab">Метод Гурвица</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a href="#miha" class="nav-link" data-toggle="tab">Метод Михайлова</a>
+                                </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="raus">
@@ -48,6 +51,9 @@
 
                                     </div>
                                 </div>
+                                <div class="tab-pane fade" id="miha">
+                                    <canvas id="miha-canvas" width="400" height="400"></canvas>
+                                </div>
                             </div>
                         </div>
                         <div class="col order-first order-md-last">
@@ -59,6 +65,10 @@
                                 <blockquote class="blockquote text-right col-6 col-md-12">
                                     <h3 id="gurvicResult" class="text-success mb-0">Система устойчива</h3>
                                     <footer class="blockquote-footer">По Гурвицу</footer>
+                                </blockquote>
+                                <blockquote class="blockquote text-right col-6 col-md-12 d-none d-md-block">
+                                    <h3 id="mihaResult" class="text-success mb-0">Система устойчива</h3>
+                                    <footer class="blockquote-footer">По Михайлову</footer>
                                 </blockquote>
                             </div>
                         </div>
@@ -155,34 +165,105 @@
             printMatrix(matrix, "#gurvicTable")
         }
 
+        var mihaCanvas = document.getElementById("miha-canvas");
+        var mctx = mihaCanvas.getContext("2d");
+
         function solveMiha(monomials) {
             var re = [],
                 im = [];
             for (var i = 0; i < monomials.length; i++) {
                 if (i % 2 != 0) {
-                    if (i % 4 != 0) {
+                    if ((i + 1) % 4 != 0) {
                         im[i] = -monomials[i];
                     } else {
                         im[i] = monomials[i];
                     }
                 } else {
-                    if ((i - 1) % 4 == 0) {
+                    if ((i) % 4 == 0) {
                         re[i] = monomials[i];
                     } else {
                         re[i] = -monomials[i];
                     }
                 }
             }
-            for (var i = 0; i < re.length; i++) {
-                if (re[i]) {
-                    console.log(`Re: ${re[i]}^${i}`);
+
+            const calcMulti = (monomials, arg) => {
+                let result = 0;
+                for (let i = 0; i < monomials.length; i++) {
+                    if (monomials[i]) {
+                        result += monomials[i] * Math.pow(arg, i);
+                    }
+                }
+                return result;
+            };
+
+            const getPart = (y, x) => {
+                if (x == 0 || y == 0) {
+                    return 0;
+                } else if (x > 0) {
+                    return y > 0 ? 1 : 4;
+                } else {
+                    return y > 0 ? 2 : 3;
                 }
             }
-            for (var i = 0; i < im.length; i++) {
-                if (im[i]) {
-                    console.log(`Im: ${im[i]}^${i}`);
+
+            const PRECITION = 0.001;
+            const RANGE = 100;
+            const EPSILON = 0.1;
+            let size = 0;
+            let dots = [];
+            let parts = 1;
+            let prevPart = 1;
+            for (let i = 0; i < RANGE; i += PRECITION) {
+                const x = calcMulti(re, i);
+                const y = calcMulti(im, i);
+                if (Math.abs(x) < EPSILON) {
+                    size = Math.max(size, Math.abs(y));
+                }
+                if (Math.abs(y) < EPSILON) {
+                    size = Math.max(size, Math.abs(x));
+                }
+                dots.push({
+                    x,
+                    y
+                });
+                const part = getPart(x, y);
+                if (part && parts >= 0) {
+                    if (part != prevPart) {
+                        if (((part - prevPart % 4) == 1)) {
+                            parts++;
+                        } else {
+                            parts = -1;
+                        }
+                        prevPart = part;
+                    }
                 }
             }
+            mctx.clearRect(0, 0, mihaCanvas.width, mihaCanvas.height);
+            const m = (200 / size) * 0.9;
+            mctx.fillStyle = "black";
+            mctx.fillRect(200, 0, 1, 400);
+            mctx.fillRect(0, 200, 400, 1);
+            if (parts == monomials.length) {
+                mctx.fillStyle = "green";
+                mctx.strokeStyle = "green";
+                $("#mihaResult").addClass("text-success").removeClass("text-danger").removeClass("text-white").text(
+                    "Система устойчива");
+            } else {
+                mctx.fillStyle = "red";
+                mctx.strokeStyle = "red";
+                $("#mihaResult").removeClass("text-success").addClass("text-danger").text("Система не устойчива");
+            }
+            mctx.lineWidth="2";
+            mctx.fillRect(dots[0].x * m + 195, dots[0].y * m + 195, 10, 10);
+            const text = "(" + dots[0].x + "," + dots[0].y + ")";
+            mctx.fillText(text, dots[0].x * m + 200 - mctx.measureText(text).width / 2, dots[0].y * m + 215);
+            mctx.beginPath();
+            mctx.moveTo(dots[0].x * m + 200, dots[0].y * m + 200);
+            for (let i = 1; i < dots.length; i++) {
+                mctx.lineTo(dots[i].x * m + 200, dots[i].y * m + 200); 
+            }
+            mctx.stroke();
         }
 
         $("#polynomial").on('input', function (e) {
@@ -193,7 +274,6 @@
             } else {
                 $(this).removeClass("is-invalid");
             }
-            console.log(1);
             var monomialsStrs = val.match(/([-+\d\.]+)?p?(\^([\d]+))?/g);
             var monomials = [];
             for (var i = 0; i < monomialsStrs.length - 1; i++) {
