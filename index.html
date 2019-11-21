@@ -101,11 +101,13 @@
             }
             printMatrix(matrix, "#rausTable");
 
-            $("#rausResult").addClass("text-success").removeClass("text-danger").removeClass("text-white").text("Система устойчива");
+            $("#rausResult").addClass("text-success").removeClass("text-danger").removeClass("text-white").text(
+                "Система устойчива");
             for (var i = 1; i < matrix.length; i++) {
                 if (matrix[0][0] * matrix[i][0] <= 0) {
                     $("#rausResult").removeClass("text-success").addClass("text-danger").text("Система не устойчива");
-                    $("#rausTable td[data-row='" + i + "'][data-column='0']").addClass("bg-danger").addClass("text-white");
+                    $("#rausTable td[data-row='" + i + "'][data-column='0']").addClass("bg-danger").addClass(
+                        "text-white");
                 }
             }
 
@@ -153,6 +155,36 @@
             printMatrix(matrix, "#gurvicTable")
         }
 
+        function solveMiha(monomials) {
+            var re = [],
+                im = [];
+            for (var i = 0; i < monomials.length; i++) {
+                if (i % 2 != 0) {
+                    if (i % 4 != 0) {
+                        im[i] = -monomials[i];
+                    } else {
+                        im[i] = monomials[i];
+                    }
+                } else {
+                    if ((i - 1) % 4 == 0) {
+                        re[i] = monomials[i];
+                    } else {
+                        re[i] = -monomials[i];
+                    }
+                }
+            }
+            for (var i = 0; i < re.length; i++) {
+                if (re[i]) {
+                    console.log(`Re: ${re[i]}^${i}`);
+                }
+            }
+            for (var i = 0; i < im.length; i++) {
+                if (im[i]) {
+                    console.log(`Im: ${im[i]}^${i}`);
+                }
+            }
+        }
+
         $("#polynomial").on('input', function (e) {
             var val = e.target.value;
             if (!val.match(/^[\d\.\+\-p\^]+$/)) {
@@ -179,6 +211,7 @@
             }
             solveRause(monomials);
             solveGurvic(monomials);
+            solveMiha(monomials);
         });
     </script>
 </body>
