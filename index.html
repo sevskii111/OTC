@@ -104,6 +104,7 @@
 
     <script src="js/jquery-3.3.1.js"></script>
     <script src="js/bootstrap.bundle.js"></script>
+    <script src="js/math.js"></script>
     <script>
         function printMatrix(matrix, query) {
             var $table = $(query);
@@ -147,6 +148,7 @@
 
         }
 
+
         function det(matrix) {
             if (matrix.length == 1) {
                 return matrix[0][0];
@@ -162,6 +164,7 @@
             }
         }
 
+
         function solveGurvic(monomials) {
             var matrix = [];
             for (var i = 0; i < monomials.length - 1; i++) {
@@ -171,15 +174,14 @@
                 }
             }
 
-            var sign = det(matrix);
             $("#gurvicDets").html("");
             $("#gurvicResult").addClass("text-success").removeClass("text-danger").text("Система устойчива");
             $("#gurvicDets").html("");
             for (var i = 1; i <= matrix.length; i++) {
-                var curr = det(matrix.slice(0, i).map(function (e) {
+                var curr = math.det(matrix.slice(0, i).map(function (e) {
                     return e.slice(0, i)
-                }));
-                if (curr * sign <= 0) {
+                })).toFixed(2);
+                if (curr <= 0) {
                     $("#gurvicResult").removeClass("text-success").addClass("text-danger").text("Система не устойчива");
                     $("#gurvicDets").append($("<span class='det col-6 text-danger'>Δ" + i + "=" + curr + "  </span>"));
                 } else {
@@ -234,7 +236,7 @@
             const PRECITION = 0.001;
             const RANGE = 100;
             const EPSILON = 10;
-            let size = 0;
+            let size = 1;
             let dots = [];
             let parts = 1;
             let prevPart = 1;
