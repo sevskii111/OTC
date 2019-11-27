@@ -195,7 +195,11 @@
         function solveMiha(monomials) {
             var re = [],
                 im = [];
+            let max = 0;
             for (var i = 0; i < monomials.length; i++) {
+                if (monomials[i]) {
+                    max = i;
+                }
                 if (i % 2 != 0) {
                     if ((i + 1) % 4 != 0) {
                         im[i] = -monomials[i];
@@ -233,7 +237,14 @@
 
             const PRECITION = 0.001;
             const RANGE = 100;
-            const EPSILON = 10;
+            let EPSILON;
+            if (max < 3) {
+                EPSILON = 0.1;
+            } else if (max < 6) {
+                EPSILON = 1;
+            } else {
+                EPSILON = 10;
+            }
             let size = 0;
             let dots = [];
             let parts = 1;
