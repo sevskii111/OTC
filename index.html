@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Шаклеин 8091</title>
+    <link rel="stylesheet" href="css/all.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/styles.css">
 </head>
@@ -13,23 +14,23 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="d-flex vh-100 col row">
+            <div class="d-flex vh-100 col-12 mx-auto row">
                 <div class="align-self-center jumbotron col" style="min-height:75%; margin-bottom: 0">
                     <div class="row">
                         <form class="col">
                             <!-- <input type="text" class="form-control" id="polynomial"> -->
-                            <div class="row text-center" id="polynomial-powers">
-                                <p class="col mb-0">p<span class="super">10</span></p>
-                                <p class="col mb-0">p<span class="super">9</span></p>
-                                <p class="col mb-0">p<span class="super">8</span></p>
-                                <p class="col mb-0">p<span class="super">7</span></p>
-                                <p class="col mb-0">p<span class="super">6</span></p>
-                                <p class="col mb-0">p<span class="super">5</span></p>
-                                <p class="col mb-0">p<span class="super">4</span></p>
-                                <p class="col mb-0">p<span class="super">3</span></p>
-                                <p class="col mb-0">p<span class="super">2</span></p>
-                                <p class="col mb-0">p<span class="super">1</span></p>
-                                <p class="col mb-0"></p>
+                            <div class="row text-center" id="polynomial-power-labels">
+                                <p class="col mb-0 px-0">p<span class="super">10</span></p>
+                                <p class="col mb-0 px-0">p<span class="super">9</span></p>
+                                <p class="col mb-0 px-0">p<span class="super">8</span></p>
+                                <p class="col mb-0 px-0">p<span class="super">7</span></p>
+                                <p class="col mb-0 px-0">p<span class="super">6</span></p>
+                                <p class="col mb-0 px-0">p<span class="super">5</span></p>
+                                <p class="col mb-0 px-0">p<span class="super">4</span></p>
+                                <p class="col mb-0 px-0">p<span class="super">3</span></p>
+                                <p class="col mb-0 px-0">p<span class="super">2</span></p>
+                                <p class="col mb-0 px-0">p<span class="super">1</span></p>
+                                <p class="col mb-0 px-0"></p>
                             </div>
                             <div class="form-group row" id="polynomial-powers">
                                 <input type="number" class="form-control power col" data-power="10" placeholder="0">
@@ -46,28 +47,35 @@
                             </div>
                         </form>
                     </div>
+                    <div class="col-12">
+                        <div class="row">
+                            <blockquote class="blockquote text-center col">
+                                <h3 id="rausResult" class="text-success mb-0">Система устойчива</h3>
+                            </blockquote>
+                        </div>
+                    </div>
                     <div class="row mt-2">
-                        <div class="col-12 col-md-auto">
-                            <ul class="nav nav-tabs">
+                        <div class="col-12 mx-0">
+                            <ul class="nav nav-tabs nav-justified">
                                 <li class="nav-item">
                                     <a href="#raus" class="nav-link active" data-toggle="tab">
-                                        Метод Рауса
+                                        Раус
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#gurvic" class="nav-link" data-toggle="tab">Метод Гурвица</a>
+                                    <a href="#gurvic" class="nav-link" data-toggle="tab">Гурвиц</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="#miha" class="nav-link" data-toggle="tab">Метод Михайлова</a>
+                                    <a href="#miha" class="nav-link" data-toggle="tab">Михайлов</a>
                                 </li>
                             </ul>
                             <div class="tab-content">
-                                <div class="tab-pane fade show active" id="raus">
+                                <div class="tab-pane fade show active w-100" id="raus">
                                     <table class="table table-bordered table-responsive-md">
                                         <tbody id="rausTable"></tbody>
                                     </table>
                                 </div>
-                                <div class="tab-pane fade" id="gurvic">
+                                <div class="tab-pane fade w-100" id="gurvic">
                                     <table class="table table-bordered table-responsive-md">
                                         <tbody id="gurvicTable"></tbody>
                                     </table>
@@ -75,25 +83,17 @@
 
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="miha">
-                                    <canvas id="miha-canvas" width="400" height="400"></canvas>
+                                <div class="tab-pane fade w-100" id="miha">
+                                    <div class="d-flex flex-column">
+                                        <canvas id="miha-canvas" class="mx-auto" width="400" height="400"></canvas>
+                                        <div class="btn-group scale-buttons">
+                                            <div class="btn btn-primary scale scale-minus"><i
+                                                    class="fas fa-search-minus"></i></div>
+                                            <div class="btn btn-primary scale scale-plus"><i
+                                                    class="fas fa-search-plus"></i></div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="col order-first order-md-last">
-                            <div class="row">
-                                <blockquote class="blockquote text-right col-6 col-md-12">
-                                    <h3 id="rausResult" class="text-success mb-0">Система устойчива</h3>
-                                    <footer class="blockquote-footer">По Раусу</footer>
-                                </blockquote>
-                                <blockquote class="blockquote text-right col-6 col-md-12">
-                                    <h3 id="gurvicResult" class="text-success mb-0">Система устойчива</h3>
-                                    <footer class="blockquote-footer">По Гурвицу</footer>
-                                </blockquote>
-                                <blockquote class="blockquote text-right col-6 col-md-12 d-none d-md-block">
-                                    <h3 id="mihaResult" class="text-success mb-0">Система устойчива</h3>
-                                    <footer class="blockquote-footer">По Михайлову</footer>
-                                </blockquote>
                             </div>
                         </div>
                     </div>
@@ -175,24 +175,54 @@
             }
 
             $("#gurvicDets").html("");
-            $("#gurvicResult").addClass("text-success").removeClass("text-danger").text("Система устойчива");
             $("#gurvicDets").html("");
+
             for (var i = 1; i <= matrix.length; i++) {
                 var curr = math.det(matrix.slice(0, i).map(function (e) {
                     return e.slice(0, i)
                 })).toFixed(2);
                 if (curr <= 0) {
-                    $("#gurvicResult").removeClass("text-success").addClass("text-danger").text("Система не устойчива");
                     $("#gurvicDets").append($("<span class='det col-6 text-danger'>Δ" + i + "=" + curr + "  </span>"));
-                } else {
-                    $("#gurvicDets").append($("<span class='det col-6'>Δ" + i + "=" + curr + "  </span>"));
                 }
             }
+
             printMatrix(matrix, "#gurvicTable")
         }
 
         var mihaCanvas = document.getElementById("miha-canvas");
         var mctx = mihaCanvas.getContext("2d");
+
+        let currMonomials = [];
+        let scaleLevel = 0;
+        let maxScaleLevel = 0;
+
+        function setScale(scale) {
+            scaleLevel = Math.max(Math.min(scale, maxScaleLevel), 0);
+            if (scaleLevel == 0) {
+                $('.scale-minus').attr("disabled", true);
+                $('.scale-minus').addClass("disabled");
+            } else {
+                $('.scale-minus').attr("disabled", false);
+                $('.scale-minus').removeClass("disabled");
+            }
+            if (scaleLevel == maxScaleLevel) {
+                $('.scale-plus').attr("disabled", true);
+                $('.scale-plus').addClass("disabled");
+            } else {
+                $('.scale-plus').attr("disabled", false);
+                $('.scale-plus').removeClass("disabled");
+            }
+        }
+
+        $(".scale-plus").click(function () {
+            setScale(scaleLevel + 1);
+            solveMiha(currMonomials);
+        });
+        $(".scale-minus").click(function () {
+            setScale(scaleLevel - 1);
+            solveMiha(currMonomials);
+        });
+
 
         function solveMiha(monomials) {
             var re = [],
@@ -238,28 +268,15 @@
             }
 
             const PRECITION = 0.001;
+            const E = 1;
             const RANGE = 100;
-            let EPSILON;
-            if (max <= 3) {
-                EPSILON = 0.1;
-            } else if (max <= 5) {
-                EPSILON = 1;
-            } else {
-                EPSILON = 10;
-            }
-            let size = 0;
+            let scales = [1];
             let dots = [];
             let parts = 1;
             let prevPart = 1;
             for (let i = 0; i < RANGE; i += PRECITION) {
                 const x = calcMulti(re, i);
                 const y = calcMulti(im, i);
-                if (Math.abs(x) < EPSILON) {
-                    size = Math.max(size, Math.abs(y));
-                }
-                if (Math.abs(y) < EPSILON) {
-                    size = Math.max(size, Math.abs(x));
-                }
                 dots.push({
                     x,
                     y
@@ -267,6 +284,10 @@
                 const part = getPart(x, y);
                 if (part && parts >= 0) {
                     if (part != prevPart) {
+                        var scale = Math.max(Math.abs(x), Math.abs(y));
+                        if (scales.filter(x => Math.abs(scale - x) < E).length == 0) {
+                            scales.push(scale);
+                        }
                         if (((part - prevPart % 4) == 1)) {
                             parts++;
                         } else {
@@ -276,8 +297,12 @@
                     }
                 }
             }
+            scales = scales.sort((a, b) => b - a);
+            maxScaleLevel = scales.length - 1;
+            setScale(scaleLevel);
             mctx.clearRect(0, 0, mihaCanvas.width, mihaCanvas.height);
-            const m = (200 / size) * 0.9;
+            var scale = scales[scaleLevel];
+            var m = (200 / scale) * 0.9;
             mctx.fillStyle = "black";
             mctx.fillRect(200, 0, 1, 400);
             mctx.fillRect(0, 200, 400, 1);
@@ -285,13 +310,10 @@
             mctx.fillRect(dots[0].x * m + 198, dots[0].y * m + 198, 4, 4);
             if (parts == monomials.length) {
                 mctx.fillStyle = "green";
-                mctx.strokeStyle = "green";
-                $("#mihaResult").addClass("text-success").removeClass("text-danger").removeClass("text-white").text(
-                    "Система устойчива");
+                mctx.strokeStyle = "green"
             } else {
                 mctx.fillStyle = "red";
                 mctx.strokeStyle = "red";
-                $("#mihaResult").removeClass("text-success").addClass("text-danger").text("Система не устойчива");
             }
             mctx.lineWidth = "2";
             //const text = "(" + dots[0].x + "," + dots[0].y + ")";
@@ -300,14 +322,14 @@
             mctx.moveTo(dots[0].x * m + 200, dots[0].y * m + 200);
             for (let i = 1; i < dots.length; i++) {
                 if (dots[i].x < 0) {
-                    dots[i].x = Math.max(dots[i].x, -size * Math.pow(10, 3));
+                    dots[i].x = Math.max(dots[i].x, -scale * Math.pow(10, 3));
                 } else {
-                    dots[i].x = Math.min(dots[i].x, size * Math.pow(10, 3));
+                    dots[i].x = Math.min(dots[i].x, scale * Math.pow(10, 3));
                 }
                 if (dots[i].y < 0) {
-                    dots[i].y = Math.max(dots[i].y, -size * Math.pow(10, 3));
+                    dots[i].y = Math.max(dots[i].y, -scale * Math.pow(10, 3));
                 } else {
-                    dots[i].y = Math.min(dots[i].y, size * Math.pow(10, 3));
+                    dots[i].y = Math.min(dots[i].y, scale * Math.pow(10, 3));
                 }
                 mctx.lineTo(dots[i].x * m + 200, dots[i].y * m + 200);
             }
@@ -328,6 +350,7 @@
             solveRause(monomials);
             solveGurvic(monomials);
             solveMiha(monomials);
+            currMonomials = monomials;
         });
 
         $("#polynomial").on('input', function (e) {
@@ -353,10 +376,15 @@
                 }
                 monomials[index] = coef;
             }
+            currMonomials = monomials;
             solveRause(monomials);
             solveGurvic(monomials);
             solveMiha(monomials);
         });
+        solveRause([]);
+        solveGurvic([]);
+        solveMiha([]);
+        setScale(0);
     </script>
 </body>
 

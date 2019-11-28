@@ -2,3 +2,20 @@
     font-size: 0.6rem;
     vertical-align: super;
 }
+
+.scale-buttons {
+    width: 100px;
+    align-self: flex-end;
+}
+
+#miha-canvas {
+    width: 400px;
+    height: 400px;
+}
+
+@media (max-width: 500px) {
+    #miha-canvas {
+        width: 250px;
+        height: 250px;
+    }
+}
