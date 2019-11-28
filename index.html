@@ -271,7 +271,7 @@
             const PRECITION = 0.001;
             const E = 1;
             const RANGE = 100;
-            let scales = [1];
+            let scales = [];
             let dots = [];
             let parts = 1;
             let prevPart = 1;
@@ -299,6 +299,9 @@
                 }
             }
             scales = scales.sort((a, b) => b - a);
+            if (scales.length == 0) {
+                scales.push(1);
+            }
             maxScaleLevel = scales.length - 1;
             setScale(scaleLevel);
             mctx.clearRect(0, 0, mihaCanvas.width, mihaCanvas.height);
