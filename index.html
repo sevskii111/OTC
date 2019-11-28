@@ -175,7 +175,6 @@
             }
 
             $("#gurvicDets").html("");
-            $("#gurvicDets").html("");
 
             for (var i = 1; i <= matrix.length; i++) {
                 var curr = math.det(matrix.slice(0, i).map(function (e) {
@@ -183,6 +182,8 @@
                 })).toFixed(2);
                 if (curr <= 0) {
                     $("#gurvicDets").append($("<span class='det col-6 text-danger'>Δ" + i + "=" + curr + "  </span>"));
+                } else {
+                    $("#gurvicDets").append($("<span class='det col-6'>Δ" + i + "=" + curr + "  </span>"));
                 }
             }
 
@@ -304,6 +305,9 @@
             var scale = scales[scaleLevel];
             var m = (200 / scale) * 0.9;
             mctx.fillStyle = "black";
+            console.log(scale);
+            //const text = "(" + scale.toFixed(0) + ":1)";
+            //mctx.fillText(text, 400 - mctx.measureText(text).width, 390);
             mctx.fillRect(200, 0, 1, 400);
             mctx.fillRect(0, 200, 400, 1);
             mctx.fillStyle = "yellow";
@@ -316,8 +320,6 @@
                 mctx.strokeStyle = "red";
             }
             mctx.lineWidth = "2";
-            //const text = "(" + dots[0].x + "," + dots[0].y + ")";
-            //mctx.fillText(text, dots[0].x * m + 200 - mctx.measureText(text).width / 2, dots[0].y * m + 215);
             mctx.beginPath();
             mctx.moveTo(dots[0].x * m + 200, dots[0].y * m + 200);
             for (let i = 1; i < dots.length; i++) {
